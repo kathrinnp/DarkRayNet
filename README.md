@@ -9,7 +9,7 @@ Inputs:
 
 - Branching fractions in qq, cc, bb, tt, W+W-, ZZ, gg, hh (need to be normalized to sum(fs_i) = 1)
 	  
-- Propagation parameters z_h [kpc], D_0 [cm^2/s], delta, v_Alfven [km/s], v_0,c [km/s], R_0 [MV], s_0, gamma_1, gamma_2, gamma_1,p, gamma_2,p 
+- Propagation parameters gamma_1,p, gamma_1, gamma_2,p, gamma_2, R_0 [MV], s_0, D_0 [cm^2/s], delta, v_Alfven [km/s], v_0,c [km/s], z_h [kpc]
 
 Outputs: 
 
