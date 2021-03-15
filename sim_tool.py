@@ -1,4 +1,4 @@
-from preamble import *
+from preamble_DRN import *
 
 class antiproton_sim:
     def __init__(self):
@@ -31,3 +31,27 @@ class antiproton_sim:
         DM_flux = 10**self.DM_model.predict([DM_mass, DM_fs, propagation_parameters_DM])/self.E_bins**2.7
         total_flux = s_flux + DM_flux
         return total_flux, DM_flux, s_flux, self.E_bins
+
+class primary_sim:
+    def __init__(self):
+        self.load_deps()
+        print('The primary (p,He) simulation tool has been initiated.')
+        
+    def load_deps(self):
+        self.p_model = tf.keras.models.load_model(c_path + '/dependencies/p_model.h5')
+        self.He_model = tf.keras.models.load_model(c_path + '/dependencies/He_model.h5')
+        self.p_He_trafos = np.load(c_path + '/dependencies/p_He_trafos.npy', allow_pickle = True)
+        self.R_p = np.load(c_path + '/dependencies/R_p.npy')
+        self.R_He4 = np.load(c_path + '/dependencies/R_He4.npy')
+
+    def single_sim(self, propagation_parameters):
+        propagation_parameters = ((propagation_parameters - np.array(self.p_He_trafos[0])[:11])/np.array(self.p_He_trafos[1])[:11])
+        p_flux = 10**self.p_model.predict(np.repeat([propagation_parameters], 2, axis = 0))[0]/self.R_p**2.7
+        He_flux = 10**self.He_model.predict(np.repeat([propagation_parameters], 2, axis = 0))[0]/self.R_He4**2.7
+        return p_flux, self.R_p, He_flux, self.R_He4
+
+    def N_sim(self, propagation_parameters):
+        propagation_parameters = ((propagation_parameters - np.array(self.p_He_trafos[0])[:11])/np.array(self.p_He_trafos[1])[:11])
+        p_flux = 10**self.p_model.predict(propagation_parameters)/self.R_p**2.7
+        He_flux = 10**self.He_model.predict(propagation_parameters)/self.R_He4**2.7
+        return p_flux, self.R_p, He_flux, self.R_He4
