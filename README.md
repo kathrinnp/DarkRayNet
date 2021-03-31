@@ -53,13 +53,13 @@ Requirements: Numpy, Tensorflow v2.0
 	
 	inputs: propagation parameters (shape = (11,))
 	
-	outputs: proton flux, proton rigidity bins, Helium flux, Helium rigidity bins (each shape = (28,))
+	outputs: proton flux, Deuterium flux, Helium 4 flux, Helium 3 flux, Energy bins (each shape = (28,))
 	
 	- N_sim:
 	
 	inputs: propagation parameters (shape = (N,11))
 	
-	outputs: proton flux, proton rigidity bins, Helium flux, Helium rigidity bins (each flux shape = (N,28), rigidity shapes = (28,))
+	outputs: proton flux, Deuterium flux, Helium 4 flux, Helium 3 flux (each shape = (N,28), E_bins (shape = (28,))
 	
 	### More details:
 	
@@ -69,12 +69,14 @@ Requirements: Numpy, Tensorflow v2.0
 
 	Outputs: 
 
-	- Total proton flux (p + D)
+	- Proton flux
 
-	- Proton rigidity bins (GV)
+	- Deuterium flux
 
-	- Total Helium flux (He3 + He4)
+	- Helium 4 flux
 
-	- Helium rigidity bins (GV)
+	- Helium 3 flux
 
-	The fluxes are provided in [GV^-1 m^2 sr^-1 s^-1].
+	- Energy bins (GeV)
+
+	The fluxes are provided in [GeV^-1 m^2 sr^-1 s^-1].
