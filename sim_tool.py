@@ -13,9 +13,9 @@ class antiproton_sim:
         self.E_bins = np.load(c_path + '/dependencies/E.npy')
 
     def single_sim(self, propagation_parameters, DM_mass, DM_fs):
-        propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,1])[:11])/np.array(self.DM_trafos[1,1])[:11])
+        propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0])[:11])/np.array(self.DM_trafos[0,1])[:11])
         DM_mass = (DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
-        DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[2,1])) / (np.array(self.DM_trafos[3,1])- np.array(self.DM_trafos[2,1]))
+        DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
         propagation_parameters_s = ((propagation_parameters - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
         s_flux = 10**self.S_model.predict(np.repeat([propagation_parameters_s], 2, axis = 0))[0]/self.E_bins**2.7
         DM_flux = 10**self.DM_model.predict([np.repeat([DM_mass],2,axis = 0), np.repeat([DM_fs],2,axis = 0), np.repeat([propagation_parameters_DM], 2, axis = 0)])[0]/self.E_bins**2.7
@@ -23,9 +23,9 @@ class antiproton_sim:
         return total_flux, DM_flux, s_flux, self.E_bins
 
     def N_sim(self, propagation_parameters, DM_mass, DM_fs):
-        propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,1])[:11])/np.array(self.DM_trafos[1,1])[:11])
+        propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0]))/np.array(self.DM_trafos[0 ,1]))
         DM_mass = (DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
-        DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[2,1])) / (np.array(self.DM_trafos[3,1])- np.array(self.DM_trafos[2,1]))
+        DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
         propagation_parameters_s = ((propagation_parameters - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
         s_flux = 10**self.S_model.predict(propagation_parameters_s)/self.E_bins**2.7
         DM_flux = 10**self.DM_model.predict([DM_mass, DM_fs, propagation_parameters_DM])/self.E_bins**2.7
@@ -39,19 +39,25 @@ class primary_sim:
         
     def load_deps(self):
         self.p_model = tf.keras.models.load_model(c_path + '/dependencies/p_model.h5')
-        self.He_model = tf.keras.models.load_model(c_path + '/dependencies/He_model.h5')
-        self.p_He_trafos = np.load(c_path + '/dependencies/p_He_trafos.npy', allow_pickle = True)
-        self.R_p = np.load(c_path + '/dependencies/R_p.npy')
-        self.R_He4 = np.load(c_path + '/dependencies/R_He4.npy')
+        self.p_trafos = np.load(c_path + '/dependencies/p_trafos.npy', allow_pickle = True)
+        self.He4_model = tf.keras.models.load_model(c_path + '/dependencies/He4_model.h5')
+        self.He4_trafos = np.load(c_path + '/dependencies/He4_trafos.npy', allow_pickle = True)
+        self.D_model = tf.keras.models.load_model(c_path + '/dependencies/D_model.h5')
+        self.D_trafos = np.load(c_path + '/dependencies/D_trafos.npy', allow_pickle = True)
+        self.He3_model = tf.keras.models.load_model(c_path + '/dependencies/He3_model.h5')
+        self.He3_trafos = np.load(c_path + '/dependencies/He3_trafos.npy', allow_pickle = True)
+        self.E_bins = np.load(c_path + '/dependencies/E.npy')
 
     def single_sim(self, propagation_parameters):
-        propagation_parameters = ((propagation_parameters - np.array(self.p_He_trafos[0])[:11])/np.array(self.p_He_trafos[1])[:11])
-        p_flux = 10**self.p_model.predict(np.repeat([propagation_parameters], 2, axis = 0))[0]/self.R_p**2.7
-        He_flux = 10**self.He_model.predict(np.repeat([propagation_parameters], 2, axis = 0))[0]/self.R_He4**2.7
-        return p_flux, self.R_p, He_flux, self.R_He4
+        p_flux = 10**self.p_model.predict(np.repeat([((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        He3_flux = 10**self.He3_model.predict(np.repeat([((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        D_flux = 10**self.D_model.predict(np.repeat([((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        He4_flux = 10**self.He4_model.predict(np.repeat([((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        return p_flux, D_flux, He4_flux, He3_flux, self.E_bins
 
     def N_sim(self, propagation_parameters):
-        propagation_parameters = ((propagation_parameters - np.array(self.p_He_trafos[0])[:11])/np.array(self.p_He_trafos[1])[:11])
-        p_flux = 10**self.p_model.predict(propagation_parameters)/self.R_p**2.7
-        He_flux = 10**self.He_model.predict(propagation_parameters)/self.R_He4**2.7
-        return p_flux, self.R_p, He_flux, self.R_He4
+        p_flux = 10**self.p_model.predict((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])[0]/self.E_bins**2.7
+        He3_flux = 10**self.He3_model.predict((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])[0]/self.E_bins**2.7
+        D_flux = 10**self.D_model.predict((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])[0]/self.E_bins**2.7
+        He4_flux = 10**self.He4_model.predict((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])[0]/self.E_bins**2.7
+        return p_flux, D_flux, He4_flux, He3_flux, self.E_bins
