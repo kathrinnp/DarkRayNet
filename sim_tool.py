@@ -102,7 +102,7 @@ class interface_sim:
     def secondary_sim(self, propagation_parameters):
         propagation_parameters_s = ((propagation_parameters - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
         s_flux = 10**self.S_model.predict(np.repeat([propagation_parameters_s], 2, axis = 0))[0]/self.E_bins**2.7
-        s_flux, self.E_bins
+        return s_flux, self.E_bins
 
     def DM_sim(self, propagation_parameters, DM_mass, DM_fs):
         propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0])[:11])/np.array(self.DM_trafos[0,1])[:11])
