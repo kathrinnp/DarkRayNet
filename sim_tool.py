@@ -56,10 +56,10 @@ class primary_sim:
         return p_flux, D_flux, He4_flux, He3_flux, self.E_bins
 
     def N_sim(self, propagation_parameters):
-        p_flux = 10**self.p_model.predict((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])[0]/self.E_bins**2.7
-        He3_flux = 10**self.He3_model.predict((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])[0]/self.E_bins**2.7
-        D_flux = 10**self.D_model.predict((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])[0]/self.E_bins**2.7
-        He4_flux = 10**self.He4_model.predict((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])[0]/self.E_bins**2.7
+        p_flux = 10**self.p_model.predict((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])/self.E_bins**2.7
+        He3_flux = 10**self.He3_model.predict((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])/self.E_bins**2.7
+        D_flux = 10**self.D_model.predict((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])/self.E_bins**2.7
+        He4_flux = 10**self.He4_model.predict((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])/self.E_bins**2.7
         return p_flux, D_flux, He4_flux, He3_flux, self.E_bins
 
 
