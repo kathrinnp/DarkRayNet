@@ -85,19 +85,19 @@ class interface_sim:
         self.E_bins_ext = np.load(c_path + '/dependencies/E_ext.npy')
 
     def p_sim(self, propagation_parameters):
-        p_flux = 10**self.p_model.predict(np.repeat([((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        p_flux = 10**self.p_model.predict(np.repeat([((propagation_parameters - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins_ext**2.7
         return p_flux, self.E_bins_ext
 
     def D_sim(self, propagation_parameters):
-        D_flux = 10**self.D_model.predict(np.repeat([((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        D_flux = 10**self.D_model.predict(np.repeat([((propagation_parameters - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins_ext**2.7
         return D_flux, self.E_bins_ext
 
     def He3_sim(self, propagation_parameters):
-        He3_flux = 10**self.He3_model.predict(np.repeat([((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        He3_flux = 10**self.He3_model.predict(np.repeat([((propagation_parameters - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins_ext**2.7
         return He3_flux, self.E_bins_ext
 
     def He4_sim(self, propagation_parameters):
-        He4_flux = 10**self.He4_model.predict(np.repeat([((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins**2.7
+        He4_flux = 10**self.He4_model.predict(np.repeat([((propagation_parameters - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])], 2, axis = 0))[0]/self.E_bins_ext**2.7
         return He4_flux, self.E_bins_ext
 
     def secondary_sim(self, propagation_parameters):
