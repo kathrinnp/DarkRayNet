@@ -45,7 +45,7 @@ Inputs:
 		 - Default: None
 		 - Required if list of desired comic ray spectra contains 'DM Antiprotons'
 		 - Scalar or List/1D Array of length N (desired number of simulated fluxes)
-		 - Input in units $\log_{10}(m_{DM}/$MeV$)$
+		 - Input in units GeV
  - *Dark Matter Branching fractions "fs"*
 		 - Default: None
 		 - Required if list of desired comic ray spectra contains 'DM Antiprotons'
