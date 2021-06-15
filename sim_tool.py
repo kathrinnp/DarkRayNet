@@ -1,7 +1,7 @@
 from preamble_DRN import *
 
 class antiproton_sim:
-    def __init__(self, x = False):
+    def __init__(self, x = True):
         self.x = x
         self.load_deps()
         print('The antiproton simulation tool has been initiated.')
@@ -56,12 +56,39 @@ class antiproton_sim:
             return total_flux, DM_flux, s_flux, self.E_bins
 
     def N_sim(self, propagation_parameters, DM_mass, DM_fs):
-        propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0]))/np.array(self.DM_trafos[0 ,1]))
-        DM_mass = (DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
-        DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
+        if self.x == False:
+            propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0]))/np.array(self.DM_trafos[0 ,1]))
+            DM_mass = (DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
+            DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
+            DM_flux = 10**self.DM_model.predict([DM_mass, DM_fs, propagation_parameters_DM])/self.E_bins**2.7
+        else:
+            def make_prediction_x(prop_param, m, fs, E_bins, loaded_model, m0):
+                #
+                # model must already be loaded
+                #
+                logx_grid = np.linspace(-3.7, 0, 40)
+                x_grid = 10**logx_grid
+                E_eval = 10**(m0[:,np.newaxis]-3) * np.repeat([x_grid], len(m0), axis = 0)
+                final_flux = 10**(loaded_model.predict([m, fs, prop_param])) * 1/(10**(m0[:,np.newaxis]-3))**3 * 1/np.repeat([x_grid], len(m0), axis = 0)
+                DM_flux = np.zeros((len(m), 28))
+                for i in range(len(m)):
+                    E_bins_sub = []
+                    for e in self.E_all[23:51]:
+                        if e/10**(m0[i]-3) >= 10**-3.7 and e/10**(m0[i]-3) <= 1:
+                            E_bins_sub.append(e)
+                    E_bins_sub = np.array(E_bins_sub)
+                    interp_flux = np.exp(np.interp(np.log(E_bins_sub), np.log(E_eval[i]), np.log(final_flux[i]))) 
+                    inds = np.arange(np.where(E_bins == E_bins_sub[0])[0] , np.where(E_bins == E_bins_sub[0])[0] + len(E_bins_sub))
+                    if len(inds) != len(interp_flux):
+                        print(m0, interp_flux, E_bins_sub)
+                    DM_flux[i, inds] = interp_flux
+                return DM_flux
+            propagation_parameters_DM = ((propagation_parameters - np.array(self.DM_trafos[0,0]))/np.array(self.DM_trafos[0 ,1]))
+            DM_mass_scaled = (DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
+            DM_fs = (np.log10(DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
+            DM_flux = make_prediction_x(propagation_parameters_DM, DM_mass_scaled, DM_fs, self.E_bins, self.DM_model, DM_mass)
         propagation_parameters_s = ((propagation_parameters - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
         s_flux = 10**self.S_model.predict(propagation_parameters_s)/self.E_bins**2.7
-        DM_flux = 10**self.DM_model.predict([DM_mass, DM_fs, propagation_parameters_DM])/self.E_bins**2.7
         total_flux = s_flux + DM_flux
         return total_flux, DM_flux, s_flux, self.E_bins
 
