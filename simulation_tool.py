@@ -40,21 +40,26 @@ class sim_tool:
             self.continue_all = True
             self.continue_DM = True
         Output = []
-        if self.pp.ndim == 2:
+        if self.continue_all == False:
             for ptype in particle_list:
-                out = self.sim_ptype(ptype)
-                Output.append(out)
-        elif self.pp.ndim == 1:
-            self.pp = np.repeat([self.pp], 2, axis = 0)
-            if self.DM_mass != None:
-                self.DM_mass = np.repeat(np.array([self.DM_mass]), 2, axis = 0)
-            if not self.DM_fs is None:
-                self.DM_fs = np.repeat([self.DM_fs], 2, axis = 0)
-            for ptype in particle_list:
-                out = self.sim_ptype(ptype)
-                out[0] = out[0][0]
-                Output.append(out)
-        return Output
+                Output.append([[None], [None]])
+            return Output
+        else:
+            if self.pp.ndim == 2:
+                for ptype in particle_list:
+                    out = self.sim_ptype(ptype)
+                    Output.append(out)
+            elif self.pp.ndim == 1:
+                self.pp = np.repeat([self.pp], 2, axis = 0)
+                if self.DM_mass != None:
+                    self.DM_mass = np.repeat(np.array([self.DM_mass]), 2, axis = 0)
+                if not self.DM_fs is None:
+                    self.DM_fs = np.repeat([self.DM_fs], 2, axis = 0)
+                for ptype in particle_list:
+                    out = self.sim_ptype(ptype)
+                    out[0] = out[0][0]
+                    Output.append(out)
+            return Output
 
     def sim_ptype(self, ptype):
         if ptype == 'Protons':
@@ -137,6 +142,10 @@ class sim_tool:
     def check_inputs(self):
         continue_all = True
         continue_DM = True
+
+        mins_pp = [1.63, 1.6, 2.38, 2.34, 5000, 0.32, 1.15e28, 0.375, 0, 0, 2]
+        maxs_pp = [1.9, 1.88, 2.45, 2.4, 9500, 0.5, 5.2e28, 0.446, 11, 12.8, 7]
+
         if self.DM_mass is not None:
             if np.min(self.DM_mass) < (np.log10(5) + 3) or np.max(self.DM_mass) > np.log10(5000) + 3:
                 print('The particle type "DM Antiprotons" is skipped. At least one of the given DM masses is outside of the provded range (5 GeV to 5 GeV).')
@@ -145,6 +154,16 @@ class sim_tool:
         #     if self.DM_mass < 5 or self.DM_mass > 5000:
         #         print('The particle type "DM Antiprotons" is skipped. The given DM masses is outside of the provded range (5 GeV to 5 GeV).')
         #         continue_DM = False
+        strings = ['gamma 1,p', 'gamma 1', 'gamma 2,p', 'gamma 2', 'R_0', 's_0', 'D_0', 'delta', 'v_Alfven', 'v_0,c', 'z_h']
+        for i in range(11):
+            if self.pp.ndim == 2:
+                if np.min(self.pp[:, i]) <= mins_pp[i] or np.max(self.pp[:, i]) >= maxs_pp[i]:
+                    print('A least one of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
+                    continue_all = False
+            else: 
+                if (self.pp[i] <= mins_pp[i]) or  (self.pp[i] >= maxs_pp[i]):
+                    print('A least on of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
+                    continue_all = False
         if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
             print('The particle type "DM Antiprotons" is skipped. Branching fractions have to be in the range 1e-5 to 1.')
             continue_DM = False
