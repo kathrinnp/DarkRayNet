@@ -6,6 +6,8 @@ The tool is designed to predict measurable cosmic ray spectra for thousands of p
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and (physical) assumption on which the training data is based. 
 
+**If you choose to use this tool, please cite *TO DO: add link to arXiv here*** 
+
 ### Table of Contents
 * [The Simulation Tool](#The-Simulation-Tool)
     * [Requirements](#Requirements)
@@ -50,6 +52,7 @@ Inputs:
 		 - Default: None
 		 - Required if list of desired comic ray spectra contains 'DM Antiprotons'
 		 - Shape = (8,) or (N,8)
+		 - Order: q qbar (q = u+d+s), c cbar, b bbar, t tbar, W+W-, ZZ, gg, hh 
 		 - Please normalize your branching fractions so that for each flux the sum of the fractions are 1. 
  - *Dark Matter Annihilation Cross Section*
 		 - Default: None
@@ -97,6 +100,7 @@ The spectra from its annihilation into standard model particles is provided by C
 
 ### Allowed Parameter Ranges
 
+<img src="https://user-images.githubusercontent.com/55040575/125588391-83a21ff0-a8b1-4184-a71b-6a54e033ed55.png" width="600">
 
 
 [1] Julio F. Navarro, Carlos S. Frenk, and Simon D. M. White. “The Structure of Cold Dark Matter Halos”. In: The Astrophysical Journal 462 (1996), p. 563. ISSN : 1538-4357. DOI : 10.1086/177173.
