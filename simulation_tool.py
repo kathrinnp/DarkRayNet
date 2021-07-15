@@ -1,11 +1,12 @@
-from typing import final
+
 from preamble_DRN import *
 
-class sim_tool:
+class DRN:
     def __init__(self, prevent_extrapolation = True):
         self.pe = prevent_extrapolation
         self.load_deps()
         print('The simulation tool has been initiated.')
+        print()
         
     def load_deps(self):
         # Energy bins
@@ -31,7 +32,10 @@ class sim_tool:
 
     def predict(self, particle_list, propagation_parameters, DM_mass = None, DM_fs = None, sigma_v = None):
         self.pp = propagation_parameters 
-        self.DM_mass = np.log10(DM_mass) + 3 
+        if DM_mass is not None:
+            self.DM_mass = np.log10(DM_mass) + 3 
+        else:
+            self.DM_mass = DM_mass
         self.DM_fs = DM_fs
         self.sigma_v = sigma_v
         if self.pe:
@@ -89,7 +93,7 @@ class sim_tool:
             print('The parameter type "%s" given in the parameter type is not provided in this tool. It will be skipped.'%ptype)
             out = 0
         return out
-
+    
     def p_sim(self):
         p_flux = 10**self.p_model.predict((self.pp - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])/self.E_ext**2.7
         return [p_flux, self.E_ext]
@@ -113,7 +117,6 @@ class sim_tool:
 
     def DM_sim(self):
         def make_prediction_x(prop_param, m, fs, m0):
-            print(m0.shape)
             logx_grid = np.linspace(-3.7, 0, 40)
             x_grid = 10**logx_grid
             E_eval = 10**(m0[:,np.newaxis]-3) * np.repeat([x_grid], len(m0[:,np.newaxis]), axis = 0)
@@ -150,6 +153,9 @@ class sim_tool:
             if np.min(self.DM_mass) < (np.log10(5) + 3) or np.max(self.DM_mass) > np.log10(5000) + 3:
                 print('The particle type "DM Antiprotons" is skipped. At least one of the given DM masses is outside of the provded range (5 GeV to 5 GeV).')
                 continue_DM = False
+            if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
+                print('The particle type "DM Antiprotons" is skipped. Branching fractions have to be in the range 1e-5 to 1.')
+                continue_DM = False
         # elif self.DM_mass is not None:
         #     if self.DM_mass < 5 or self.DM_mass > 5000:
         #         print('The particle type "DM Antiprotons" is skipped. The given DM masses is outside of the provded range (5 GeV to 5 GeV).')
@@ -164,8 +170,5 @@ class sim_tool:
                 if (self.pp[i] <= mins_pp[i]) or  (self.pp[i] >= maxs_pp[i]):
                     print('A least on of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
                     continue_all = False
-        if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
-            print('The particle type "DM Antiprotons" is skipped. Branching fractions have to be in the range 1e-5 to 1.')
-            continue_DM = False
         return continue_all, continue_DM
 
