@@ -1,7 +1,7 @@
 # Welcome to the Dark Ray Net
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
-The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter annihilation into various standard model particles that contribute to antiproton fluxes.
+The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various standard model particles that contribute to antiproton fluxes.
 The tool is designed to predict measurable cosmic ray spectra for thousands of parameter sets in few seconds and thus enables quick parameter scans for indirect dark matter searches.
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and (physical) assumption on which the training data is based. 
@@ -85,6 +85,7 @@ Outputs:
 
 Cosmic Ray spectra of identical charge number are evaluated at the identical energy bins and can thus easily be added. 
 
+We have set up two examples (a python file and a jupyter notebook) to aid further understanding of the usage of the tool.
 ________________________________________________________________
 
 ## Further Information
