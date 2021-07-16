@@ -1,4 +1,7 @@
-# Welcome to the Dark Ray Net
+# Welcome to the Dark Ray Net  
+
+<img src="https://user-images.githubusercontent.com/55040575/125958166-4c48af03-21a2-4371-83bc-fdd346f02b3b.png" width="256">
+
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
 The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various standard model particles that contribute to antiproton fluxes.
