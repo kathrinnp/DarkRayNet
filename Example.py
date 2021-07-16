@@ -11,6 +11,10 @@ import time
 
 # First Example
 
+print()
+print('First Example: Simulate DM components of the antiproton flux, with fixed propagation parameters and branching fractions and increasing values for the DM mass.')
+
+
 # Step 2 - Define parameters for simulation inputs
 
 N = 50
@@ -37,8 +41,6 @@ t1 = time.time()
 Spectra, Energy_bins = Output[0]
 
 print()
-print('First Example: Simulate DM components of the antiproton flux, with fixed propagation parameters and branching fractions and increasing values for the DM mass.')
-print()
 print("It took ", float(t1-t0), " seconds to predict ", N*len(Particle_List), " cosmic ray spectra.")
 print()
 print("The Output spectra have the shape ", Spectra.shape, " (N, number of energy bins)")
@@ -50,6 +52,10 @@ print("with the corresponding energy bins (GeV)")
 print(Energy_bins)
 
 # Second example 
+
+print()
+print('Second Example: Simulate various cosmic ray spectra with one set of fixed propagation parameters.')
+
 
 # Step 2 - Define parameters for simulation inputs
 
@@ -75,8 +81,6 @@ D, Energy_D = Output[2]
 He3, Energy_He3 = Output[3]
 He4, Energy_He4 = Output[4]
 
-print()
-print('Second Example: Simulate various cosmic ray spectra with one set of fixed propagation parameters.')
 print()
 print("It took ", float(t3-t2), " seconds to predict ", N*len(Particle_List), " cosmic ray spectra of different particle types.")
 print()

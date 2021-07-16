@@ -5,6 +5,7 @@ class DRN:
     def __init__(self, prevent_extrapolation = True):
         self.pe = prevent_extrapolation
         self.load_deps()
+        print()
         print('The simulation tool has been initiated.')
         print()
         
@@ -44,39 +45,38 @@ class DRN:
             self.continue_all = True
             self.continue_DM = True
         Output = []
-        if self.continue_all == False:
+        if self.pp.ndim == 2:
+            self.N = len(propagation_parameters)
             for ptype in particle_list:
-                Output.append([[None], [None]])
-            return Output
-        else:
-            if self.pp.ndim == 2:
-                for ptype in particle_list:
-                    out = self.sim_ptype(ptype)
-                    Output.append(out)
-            elif self.pp.ndim == 1:
-                self.pp = np.repeat([self.pp], 2, axis = 0)
-                if self.DM_mass != None:
-                    self.DM_mass = np.repeat(np.array([self.DM_mass]), 2, axis = 0)
-                if not self.DM_fs is None:
-                    self.DM_fs = np.repeat([self.DM_fs], 2, axis = 0)
-                for ptype in particle_list:
-                    out = self.sim_ptype(ptype)
-                    out[0] = out[0][0]
-                    Output.append(out)
-            return Output
+                out = self.sim_ptype(ptype)
+                Output.append(out)
+        elif self.pp.ndim == 1:
+            self.N = 1
+            self.pp = np.repeat([self.pp], 2, axis = 0)
+            if self.DM_mass != None:
+                self.DM_mass = np.repeat(np.array([self.DM_mass]), 2, axis = 0)
+            if not self.DM_fs is None:
+                self.DM_fs = np.repeat([self.DM_fs], 2, axis = 0)
+            for ptype in particle_list:
+                out = self.sim_ptype(ptype)
+                out[0] = out[0][0]
+                Output.append(out)
+        return Output
 
     def sim_ptype(self, ptype):
         if ptype == 'Protons':
-            if self.continue_all:
-                out = self.p_sim()
+            out = self.p_sim()
         elif ptype == 'DM Antiprotons':
             if self.DM_mass is None:
+                print()
                 print('The particle type "DM Antiprotons" is skipped, because no dark matter mass was given.')
                 self.continue_DM = False
             if self.DM_fs is None:
+                print()
                 print('The particle type "DM Antiprotons" is skipped, because no dark matter branching fractions were given.')
                 self.continue_DM = False
             if self.sigma_v is None:
+                print()
                 print('No value was given for the annihilation cross section. It will be set to default (<sigma v> = 3 * 10^-26 cm^3 s^-1).')
                 sigma_v = 10**(-25.5228)
             out = self.DM_sim()
@@ -90,29 +90,45 @@ class DRN:
         elif ptype == 'Helium 3':
             out = self.He3_sim()
         else:
+            print()
             print('The parameter type "%s" given in the parameter type is not provided in this tool. It will be skipped.'%ptype)
             out = 0
         return out
     
     def p_sim(self):
-        p_flux = 10**self.p_model.predict((self.pp - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])/self.E_ext**2.7
+        if self.continue_all == False:
+            p_flux = np.zeros((self.N,len(self.E_ext)))
+        else:
+            p_flux = 10**self.p_model.predict((self.pp - np.array(self.p_trafos[0])[:11])/np.array(self.p_trafos[1])[:11])/self.E_ext**2.7
         return [p_flux, self.E_ext]
 
     def D_sim(self):
-        D_flux = 10**self.D_model.predict((self.pp - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])/self.E_ext**2.7
+        if self.continue_all == False:
+            D_flux = np.zeros((self.N,len(self.E_ext)))
+        else:
+            D_flux = 10**self.D_model.predict((self.pp - np.array(self.D_trafos[0])[:11])/np.array(self.D_trafos[1])[:11])/self.E_ext**2.7
         return [D_flux, self.E_ext]
 
     def He3_sim(self):
-        He3_flux = 10**self.He3_model.predict((self.pp - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])/self.E_ext**2.7
+        if self.continue_all == False:
+            He3_flux = np.zeros((self.N,len(self.E_ext)))
+        else:
+            He3_flux = 10**self.He3_model.predict((self.pp - np.array(self.He3_trafos[0])[:11])/np.array(self.He3_trafos[1])[:11])/self.E_ext**2.7
         return [He3_flux, self.E_ext]
 
     def He4_sim(self):
-        He4_flux = 10**self.He4_model.predict((self.pp - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])/self.E_ext**2.7
+        if self.continue_all == False:
+            He4_flux = np.zeros((self.N,len(self.E_ext)))
+        else:
+            He4_flux = 10**self.He4_model.predict((self.pp - np.array(self.He4_trafos[0])[:11])/np.array(self.He4_trafos[1])[:11])/self.E_ext**2.7
         return [He4_flux, self.E_ext]
 
     def secondary_sim(self):
-        propagation_parameters_s = ((self.pp - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
-        s_flux = 10**self.S_model.predict(propagation_parameters_s)/self.E_bins**2.7
+        if self.continue_all == False:
+            s_flux = np.zeros((self.N,len(self.E_bins)))
+        else:
+            propagation_parameters_s = ((self.pp - np.array(self.S_trafos[0])[:11])/np.array(self.S_trafos[1])[:11])
+            s_flux = 10**self.S_model.predict(propagation_parameters_s)/self.E_bins**2.7
         return [s_flux, self.E_bins]
 
     def DM_sim(self):
@@ -133,14 +149,14 @@ class DRN:
                 DM_flux[i, inds] = interp_flux
             return DM_flux
         if self.continue_DM == False or self.continue_all == False:
-            return [np.zeros((len(self.DM_mass), len(self.E_bins))), self.E_bins]
+            DM_flux = np.zeros((self.N,len(self.E_bins)))
         else:
             propagation_parameters_DM = ((self.pp - np.array(self.DM_trafos[0,0])[:11])/np.array(self.DM_trafos[0,1])[:11])
             DM_mass_t = (self.DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
             DM_fs = (np.log10(self.DM_fs) - np.array(self.DM_trafos[1,0])) / (np.array(self.DM_trafos[1,1])- np.array(self.DM_trafos[1,0]))
             DM_flux = np.zeros(len(self.E_bins))
             DM_flux = make_prediction_x(propagation_parameters_DM, DM_mass_t, DM_fs, self.DM_mass)
-            return [DM_flux, self.E_bins]
+        return [DM_flux, self.E_bins]
 
     def check_inputs(self):
         continue_all = True
@@ -151,9 +167,11 @@ class DRN:
 
         if self.DM_mass is not None:
             if np.min(self.DM_mass) < (np.log10(5) + 3) or np.max(self.DM_mass) > np.log10(5000) + 3:
+                print()
                 print('The particle type "DM Antiprotons" is skipped. At least one of the given DM masses is outside of the provded range (5 GeV to 5 GeV).')
                 continue_DM = False
             if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
+                print()
                 print('The particle type "DM Antiprotons" is skipped. Branching fractions have to be in the range 1e-5 to 1.')
                 continue_DM = False
         # elif self.DM_mass is not None:
@@ -164,10 +182,12 @@ class DRN:
         for i in range(11):
             if self.pp.ndim == 2:
                 if np.min(self.pp[:, i]) <= mins_pp[i] or np.max(self.pp[:, i]) >= maxs_pp[i]:
+                    print()
                     print('A least one of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
                     continue_all = False
             else: 
                 if (self.pp[i] <= mins_pp[i]) or  (self.pp[i] >= maxs_pp[i]):
+                    print()
                     print('A least on of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
                     continue_all = False
         return continue_all, continue_DM
