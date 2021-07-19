@@ -51,7 +51,7 @@ to create and activate a virtual environment within the DarkRayNet directory whe
 
 	deactivate 
 	
-command and for the use of the tool with the corresponding dependencies reactivate it with 
+command and for the use of the tool with the corresponding dependencies reactivated with 
 
 	source env/bin/activate
  
