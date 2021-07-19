@@ -4,36 +4,59 @@
 
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
-The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various standard model particles that contribute to antiproton fluxes.
+The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. 
+The training of the privded networks is based on GALPROP [1] simulations.
+
+The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various standard model particles that contribute to antiproton fluxes.
 The tool is designed to predict measurable cosmic ray spectra for thousands of parameter sets in few seconds and thus enables quick parameter scans for indirect dark matter searches.
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and (physical) assumption on which the training data is based. 
 
 **If you choose to use this tool, please cite *TO DO: add link to arXiv here*** 
+ 
+If you have questions or problems, file an issue in this repository or contact "nippel *at* physik *dot* rwth-aachen *dot* de"
 
+________________________________________________________________
+ 
 ### Table of Contents
 * [The Simulation Tool](#the-simulation-tool)
-    * [Requirements](#requirements)
-	* [Functions](#functions)
+    * [Requirements and Installation](#requirements-and-installation)
+    * [Functions](#functions)
+    * [Examples](#examples)
 * [Further Information](#further-information)
-	* [Artificial Neural Networks](#artificial-neural-networks)
-	* [Physical Assumptions](#physical-assumptions)
-	* [Allowed Parameter Ranges](#allowed-parameter-ranges)
+    * [Artificial Neural Networks](#artificial-neural-networks)
+    * [Physical Assumptions](#physical-assumptions)
+    * [Allowed Parameter Ranges](#allowed-parameter-ranges)
  
  ________________________________________________________________
 
 ## The Simulation Tool
 
-### Requirements
+### Requirements and Installation
 
-This tool is based entirely on **Python**. 
+This tool is based entirely on **Python 3**. 
 The packages needed to execute the functions in this tool are:
 
  - NumPy 
- - Tensorflow (version 2.0 or more recent)
+ - Tensorflow (version 2.3.1)
  - h5py (version 2.10.0)
+ - Jupyter Notebook (optional, for example notebook)
+ - Matplotlib (optional, for example notebook)
+ 
+Optionally, you can run 
+
+	source install_environment
+
+to create and activate a virtual environment within the DarkRayNet directory where the correct dependencies are automatically installed. After running this file the environment can be deactivated with the 
+
+	deactivate 
+	
+command and for the use of the tool with the corresponding dependencies reactivate it with 
+
+	source env/bin/activate
  
  ### Functions
+ 
 **__init__** (prevent_extrapolation  =  True)
  - Loads the neural network
  - Options: 
@@ -88,21 +111,27 @@ Outputs:
 
 Cosmic Ray spectra of identical charge number are evaluated at the identical energy bins and can thus easily be added. 
 
-We have set up two examples (a python file and a jupyter notebook) to aid further understanding of the usage of the tool.
+### Examples
+
+We have set up two examples to aid further understanding of the usage of the tool.
+
+- A python file that prints out examplary cosmic ray spectra based on arbitrarily defined input parameters. This file can also be run to check whether all requirements are installed correctly
+- A jupyter notebook in which some exemplary spectra are plotted for a visualization of the outputs of the tool. 
+
 ________________________________________________________________
 
 ## Further Information
 
 ### Artificial Neural Networks
 
-There is a total of six neural networks implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. The neural networks are implemented using the Keras API [3] and Tensorflow as backend [4]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
+There is a total of six neural networks implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. The neural networks are implemented using the Keras API [2] and Tensorflow as backend [3]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
 ### Physical Assumptions
 
 We only give a very brief overview here. Please refer to ***TO DO: add link to arXiv here*** for a detailled description. 
 
 **Cosmic Ray Propagation**
 
-All cosmic ray spectra used for the network training are simulated with GALPROP [5]. We assume a propagation model that can be represented by the following parameters: 
+All cosmic ray spectra used for the network training are simulated with GALPROP [1]. We assume a propagation model that can be represented by the following parameters: 
 
 Sources of primary cosmic rays:
  - $\gamma_1, \gamma_2$ Spectral indices of the rigidity dependent source term (Index $_p$ for protons) 
@@ -119,8 +148,8 @@ Propagation:
 
 **Dark Matter Annihilation**
 
-We assume WIMP dark matter that is present in our Galaxy in a NFW [1] density profile relation. 
-The spectra from its annihilation into standard model particles is provided by Cirelli et al. [2] in their tool PPPC4DMID. 
+We assume WIMP dark matter that is present in our Galaxy in a NFW [4] density profile relation. 
+The spectra from its annihilation into standard model particles is provided by Cirelli et al. [5] in their tool PPPC4DMID. 
 
 ________________________________________________________________
 
@@ -157,17 +186,12 @@ For physical reasons, make sure to normalize the branching fractions in such a w
 
 ________________________________________________________________
 
-If you have questions or issues file an issue in the repository or contact nippel[at]physik[dot]rwth-aachen[dot]de
+[1] https://galprop.stanford.edu/
 
-________________________________________________________________
+[2] https://keras.io/api/
 
+[3] https://www.tensorflow.org/
 
-[1] Julio F. Navarro, Carlos S. Frenk, and Simon D. M. White. “The Structure of Cold Dark Matter Halos”. In: The Astrophysical Journal 462 (1996), p. 563. ISSN : 1538-4357. DOI : 10.1086/177173.
+[4] Julio F. Navarro, Carlos S. Frenk, and Simon D. M. White. “The Structure of Cold Dark Matter Halos”. In: The Astrophysical Journal 462 (1996), p. 563. ISSN : 1538-4357. DOI : 10.1086/177173.
 
-[2] Marco Cirelli et al. “PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection”. In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051. DOI : 10.1088/1475-7516/2011/03/051. arXiv: 1012.4515.
-
-[3] https://keras.io/api/
-
-[4] https://www.tensorflow.org/
-
-[5] https://galprop.stanford.edu/
+[5] Marco Cirelli et al. “PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection”. In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051. DOI : 10.1088/1475-7516/2011/03/051. arXiv: 1012.4515.
