@@ -5,9 +5,9 @@
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
 The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. 
-The training of the privded networks is based on GALPROP [1] simulations.
+The training of the provided networks is based on GALPROP [1] simulations.
 
-The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various standard model particles that contribute to antiproton fluxes.
+The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various Standard Model particles that contribute to antiproton fluxes.
 The tool is designed to predict measurable cosmic ray spectra for thousands of parameter sets in few seconds and thus enables quick parameter scans for indirect dark matter searches.
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and (physical) assumption on which the training data is based. 
@@ -149,7 +149,7 @@ Propagation:
 **Dark Matter Annihilation**
 
 We assume WIMP dark matter that is present in our Galaxy in a NFW [4] density profile relation. 
-The spectra from its annihilation into standard model particles is provided by Cirelli et al. [5] in their tool PPPC4DMID. 
+The spectra from its annihilation into Standard Model particles is provided by Cirelli et al. [5] in their tool PPPC4DMID. 
 
 ________________________________________________________________
 
