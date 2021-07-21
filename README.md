@@ -105,12 +105,19 @@ Inputs:
 Outputs:
 
  - List of tuples (flux, energy bins) for each element in the list of desired fluxes. 
-		 - The length of the energy bins (len(E)) can vary for different particle types, as they're adjusted to the available measurements (AMS-02, Voyager)
+		 - The length of the energy bins (len(E)) can vary for different particle types, as they're adjusted to the available measurements (AMS-02 [2], Voyager [3])
 		 - Shape of each flux array: 
 		 
 		 (N, length(energy bins)) or (length(energy bins),) if N=1
 
 Cosmic Ray spectra of identical charge number are evaluated at the identical energy bins and can thus easily be added. 
+
+**create_propagation_parameters** (gamma_1p = 1.80, gamma_1 = 1.79, gamma_2p = 2.405, gamma_2 = 2.357, R_0 = 7.92e3, s = 0.37, D_0 = 2.05e28, delta = 0.419, v_alfven = 8.84, v_0c = 0.09, z_h = 2.60, N_identical = 1)
+
+- Helper function that provides an array of propagation parameters suitable for the input of the predict function. 
+- Input parameter defaults are taken from a fit of simulated antiproton, proton and helium fluxes to AMS-02 [2] and Voyager [3] data, see table 1 in the attached paper. 
+- N_identical is set to 1 but can be increased if multiple identical sets of parameters are desired, for example for evaluation multiple sets of DM parameters at once.
+- Output: numpy array of shape (11,) or (N_identical,11) if N_identical > 1.
 
 ### Examples
 
@@ -126,7 +133,7 @@ ________________________________________________________________
 ### Artificial Neural Networks
 
 There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. 
-The neural networks have a build in recurrent layer and are implemented using the Keras API [2] and Tensorflow as backend [3]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
+The neural networks have a build in recurrent layer and are implemented using the Keras API [4] and Tensorflow as backend [5]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
 ### Physical Assumptions
 
 We only give a very brief overview here. Please refer to ***TO DO: add link to arXiv here*** for a detailled description. 
@@ -152,8 +159,8 @@ Note that we do not implement any consideration of solar modulation in this tool
 
 **Dark Matter Annihilation**
 
-We assume WIMP dark matter that is present in our Galaxy in a NFW [4] density profile relation. 
-The spectra from its annihilation into Standard Model particles is provided by Cirelli et al. [5] in their tool PPPC4DMID. 
+We assume WIMP dark matter that is present in our Galaxy in a NFW density profile relation. 
+The spectra from its annihilation into Standard Model particles is provided by Cirelli et al. [6] in their tool PPPC4DMID. 
 
 ________________________________________________________________
 
@@ -192,17 +199,21 @@ ________________________________________________________________
 
 ### Performance
 
-The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect realtive to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
+The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data [2] and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect realtive to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
 
 The prediction times of this tool depend on the number of selected CR particle types. You can simulate a few tousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-ANN-based methods. 
 ________________________________________________________________
 
 [1] https://galprop.stanford.edu/
 
-[2] https://keras.io/api/
+[2] AMS Collaboration, M. Aguilar et al., The Alpha Magnetic Spectrometer (AMS) on the
+international space station: Part II — Results from the first seven years, Phys. Rept. 894
+(2021) 1–116. https://www.sciencedirect.com/science/article/pii/S0370157320303434?via%3Dihub
 
-[3] https://www.tensorflow.org/
+[3] E. C. Stone, A. C. Cummings, F. B. McDonald, B. C. Heikkila, N. Lal, et al., Voyager 1, http://dx.doi.org/10.1126/science.1236408
 
-[4] Julio F. Navarro, Carlos S. Frenk, and Simon D. M. White. “The Structure of Cold Dark Matter Halos”. In: The Astrophysical Journal 462 (1996), p. 563. ISSN : 1538-4357. DOI : 10.1086/177173.
+[4] https://keras.io/api/
 
-[5] Marco Cirelli et al. “PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection”. In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051. DOI : 10.1088/1475-7516/2011/03/051. arXiv: 1012.4515.
+[5] https://www.tensorflow.org/
+
+[6] Marco Cirelli et al. “PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection”. In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051. DOI : 10.1088/1475-7516/2011/03/051. arXiv: 1012.4515.
