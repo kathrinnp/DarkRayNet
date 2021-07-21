@@ -4,7 +4,7 @@
 
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
-The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray spectra at Earth, for an extensive range of parameters. 
+The recurrent neural networks provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray (CR) spectra at Earth, for an extensive range of parameters. 
 The training of the provided networks is based on GALPROP [1] simulations.
 
 The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various Standard Model particles that contribute to antiproton fluxes.
@@ -146,7 +146,9 @@ Propagation:
  - Alfven velocity $v_\text{alfven}$
  -  Convection velocity $v_\text{conv}$
  
-  We assume only secondary emission of cosmic ray antiprotons through processes in the ISM.
+We assume only secondary emission of cosmic ray antiprotons through processes in the ISM.
+
+Note that we do not implement any consideration of solar modulation in this tool.
 
 **Dark Matter Annihilation**
 
@@ -192,7 +194,7 @@ ________________________________________________________________
 
 The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect realtive to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
 
-
+The prediction times of this tool depend on the number of selected CR particle types. You can simulate a few tousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-ANN-based methods. 
 ________________________________________________________________
 
 [1] https://galprop.stanford.edu/
