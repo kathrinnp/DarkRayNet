@@ -170,16 +170,12 @@ class DRN:
                 print()
                 print('The particle type "DM Antiprotons" is skipped. At least one of the given DM masses is outside of the provded range (5 GeV to 5 GeV).')
                 continue_DM = False
-            if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
-                new_fs = np.clip(self.DM_fs, 1e-5, 1)
-                if self.DM_fs.ndim == 2:
-                    new_fs = new_fs/np.sum(new_fs, axis = -1)[:,None]
-                else:
-                    new_fs = new_fs/np.sum(new_fs, axis = -1)
-                new_fs = np.clip(new_fs, 1e-5, 1)
+            if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1 or not np.allclose(np.sum(self.DM_fs, axis = -1), np.ones_like(np.sum(self.DM_fs, axis = -1))):
+                new_fs = self.norm_scale_fractions(self.DM_fs)
                 self.DM_fs = new_fs
+                print(new_fs)
                 print()
-                print('The selected branching fractions were not in the range of trained parameters. Values below 1e-5 were mapped to 1e-5 and the remaining fractions normalized accordingly.')
+                print('The selected branching fractions were not in the range of trained parameters or not normalized to one. Values below 1e-5 were mapped to 1e-5 and the remaining fractions normalized accordingly.')
                 # continue_DM = False
         # elif self.DM_mass is not None:
         #     if self.DM_mass < 5 or self.DM_mass > 5000:
@@ -205,3 +201,19 @@ class DRN:
             propagation_parameters = np.repeat(propagation_parameters[np.newaxis], N_identical, axis = 0)
         return propagation_parameters
 
+    def norm_scale_fractions(self, fs):
+        if fs.ndim > 1:
+            rf = fs/np.sum(fs, axis = -1)[:,None] # initial normalization
+            masked_array = np.where(rf < 1e-5, 0, 1) # ones for every fs >= 1e-5
+            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs < 1e-5
+            masked_rf = masked_array * rf # array with entries only >= 1e-5, else 0
+            scaling = (1-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_rf, axis = -1) # scaling for each >=1e-5 fs, while keeping relative fractions and normalizations
+            new_fs = masked_rf * scaling[:,None] + masked_reversed*1e-5 # scale fs >=1e-5 and set other to 1e-5
+        else:
+            rf = fs/np.sum(fs, axis = -1) # initial normalization
+            masked_array = np.where(rf < 1e-5, 0, 1) # ones for every fs >= 1e-5
+            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs < 1e-5
+            masked_rf = masked_array * rf # array with entries only >= 1e-5, else 0
+            scaling = (1-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_rf, axis = -1) # scaling for each >=1e-5 fs, while keeping relative fractions and normalizations
+            new_fs = masked_rf * scaling + masked_reversed*1e-5 # scale fs >=1e-5 and set other to 1e-5
+        return new_fs
