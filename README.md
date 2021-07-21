@@ -27,6 +27,7 @@ ________________________________________________________________
     * [Artificial Neural Networks](#artificial-neural-networks)
     * [Physical Assumptions](#physical-assumptions)
     * [Allowed Parameter Ranges](#allowed-parameter-ranges)
+	* [Performance](#performance)
  
  ________________________________________________________________
 
@@ -124,7 +125,8 @@ ________________________________________________________________
 
 ### Artificial Neural Networks
 
-There is a total of six neural networks implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. The neural networks are implemented using the Keras API [2] and Tensorflow as backend [3]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
+There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. 
+The neural networks have a build in recurrent layer and are implemented using the Keras API [2] and Tensorflow as backend [3]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
 ### Physical Assumptions
 
 We only give a very brief overview here. Please refer to ***TO DO: add link to arXiv here*** for a detailled description. 
@@ -183,6 +185,13 @@ For the DM parameters the limitations are:
 and the branching fractions must be chosen to be larger than 10^-5, i.e. 0.001 % and smaller than one , minus the minimal contributions of the remaining branching fractions.
 So a maximally dominant branching fraction would be 1 - 7*10^-5 = 0.99993.
 For physical reasons, make sure to normalize the branching fractions in such a way that they sum up to one. 
+
+________________________________________________________________
+
+### Performance
+
+The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect realtive to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
+
 
 ________________________________________________________________
 
