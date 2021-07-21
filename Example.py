@@ -19,7 +19,7 @@ print('First Example: Simulate DM components of the antiproton flux, with fixed 
 
 N = 50
 
-prop_params = np.array([1.8, 1.79, 2.405, 2.357, 7.92e+03, 0.37, 2.05e+28, 0.419, 8.84, 0.09, 2.60]) * np.ones((N, 11)) # N identical sets of parameters
+prop_params = DRN.create_propagation_parameters(N_identical=N)  # Use helper function, leave parameters at default, 
 
 DM_masses = np.logspace(1, 3, N) # N different masses 
 
@@ -61,7 +61,7 @@ print('Second Example: Simulate various cosmic ray spectra with one set of fixed
 
 N = 1
 
-prop_params = np.array([1.8, 1.79, 2.405, 2.357, 7.92e+03, 0.37, 2.05e+28, 0.419, 8.84, 0.09, 2.60]) 
+prop_params = DRN.create_propagation_parameters() # Use helper function, leave parameters at default, 
 
 # Step 3 - Define the desired output spectra
 

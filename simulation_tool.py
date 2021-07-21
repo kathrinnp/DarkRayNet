@@ -171,9 +171,16 @@ class DRN:
                 print('The particle type "DM Antiprotons" is skipped. At least one of the given DM masses is outside of the provded range (5 GeV to 5 GeV).')
                 continue_DM = False
             if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1:
+                new_fs = np.clip(self.DM_fs, 1e-5, 1)
+                if self.DM_fs.ndim == 2:
+                    new_fs = new_fs/np.sum(new_fs, axis = -1)[:,None]
+                else:
+                    new_fs = new_fs/np.sum(new_fs, axis = -1)
+                new_fs = np.clip(new_fs, 1e-5, 1)
+                self.DM_fs = new_fs
                 print()
-                print('The particle type "DM Antiprotons" is skipped. Branching fractions have to be in the range 1e-5 to 1.')
-                continue_DM = False
+                print('The selected branching fractions were not in the range of trained parameters. Values below 1e-5 were mapped to 1e-5 and the remaining fractions normalized accordingly.')
+                # continue_DM = False
         # elif self.DM_mass is not None:
         #     if self.DM_mass < 5 or self.DM_mass > 5000:
         #         print('The particle type "DM Antiprotons" is skipped. The given DM masses is outside of the provded range (5 GeV to 5 GeV).')
@@ -191,4 +198,10 @@ class DRN:
                     print('A least on of the inputs for %s is outside of the trained parameter ranges. No output will be given. '%strings[i])
                     continue_all = False
         return continue_all, continue_DM
+
+    def create_propagation_parameters(self, gamma_1p = 1.80, gamma_1 = 1.79, gamma_2p = 2.405, gamma_2 = 2.357, R_0 = 7.92e3, s = 0.37, D_0 = 2.05e28, delta = 0.419, v_alfven = 8.84, v_0c = 0.09, z_h = 2.60, N_identical = 1):
+        propagation_parameters = np.array([gamma_1p, gamma_1, gamma_2p, gamma_2, R_0, s, D_0, delta, v_alfven, v_0c, z_h])
+        if N_identical > 1:
+            propagation_parameters = np.repeat(propagation_parameters[np.newaxis], N_identical, axis = 0)
+        return propagation_parameters
 
