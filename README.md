@@ -12,7 +12,7 @@ The tool is designed to predict measurable cosmic ray spectra for thousands of p
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and (physical) assumption on which the training data is based. 
 
-**If you choose to use this tool, please cite *TO DO: add link to arXiv here*** 
+**If you choose to use this tool, please cite ArXiv:2107.12395**
  
 If you have questions or problems, file an issue in this repository or contact "nippel *at* physik *dot* rwth-aachen *dot* de"
 
@@ -133,10 +133,10 @@ ________________________________________________________________
 ### Artificial Neural Networks
 
 There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. 
-The neural networks have a build in recurrent layer and are implemented using the Keras API [4] and Tensorflow as backend [5]. For a detailled description of the architectures and the training process see ***TO DO: add link to arXiv here***
+The neural networks have a build in recurrent layer and are implemented using the Keras API [4] and Tensorflow as backend [5]. For a detailled description of the architectures and the training process see ArXiv:2109.12395
 ### Physical Assumptions
 
-We only give a very brief overview here. Please refer to ***TO DO: add link to arXiv here*** for a detailled description. 
+We only give a very brief overview here. Please refer to ArXiv:2109.12395 for a detailled description. 
 
 **Cosmic Ray Propagation**
 
