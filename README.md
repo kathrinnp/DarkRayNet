@@ -133,10 +133,10 @@ ________________________________________________________________
 ### Artificial Neural Networks
 
 There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons, tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. 
-The neural networks have a build in recurrent layer and are implemented using the Keras API [4] and Tensorflow as backend [5]. For a detailled description of the architectures and the training process see ArXiv:2109.12395
+The neural networks have a build in recurrent layer and are implemented using the Keras API [4] and Tensorflow as backend [5]. For a detailled description of the architectures and the training process see ArXiv:2107.12395
 ### Physical Assumptions
 
-We only give a very brief overview here. Please refer to ArXiv:2109.12395 for a detailled description. 
+We only give a very brief overview here. Please refer to ArXiv:2107.12395 for a detailled description. 
 
 **Cosmic Ray Propagation**
 
@@ -199,9 +199,9 @@ ________________________________________________________________
 
 ### Performance
 
-The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data [2] and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect realtive to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
+The accuracy of the ANNs was tested in the development phase and we found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude significantly below the measurement uncertainites of the AMS-02 data [2] and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect relative to the magnitude of the measurement is miniscule. We elaborate further on this in our paper. 
 
-The prediction times of this tool depend on the number of selected CR particle types. You can simulate a few tousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-ANN-based methods. 
+The prediction times of this tool depend on the number of selected CR particle types. You can simulate a few thousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-ANN-based methods. 
 ________________________________________________________________
 
 [1] https://galprop.stanford.edu/
