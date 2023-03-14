@@ -4,7 +4,8 @@
 # Step 1 - Inititate the DRN simulation tool
 
 from simulation_tool import DRN
-DRN = DRN()
+DRN = DRN(propagation_model='INJ.BRK', init_particles = ['DM Antiprotons', 'Secondary Antiprotons', 'Protons', 'Helium']
+)
 #
 import numpy as np
 import time
@@ -19,7 +20,7 @@ print('First Example: Simulate DM components of the antiproton flux, with fixed 
 
 N = 50
 
-prop_params = DRN.create_propagation_parameters(N_identical=N)  # Use helper function, leave parameters at default, 
+prop_params = DRN.create_INJ_BRK_parameters(N_identical=N)  # Use helper function, leave parameters at default, 
 
 DM_masses = np.logspace(1, 3, N) # N different masses 
 
@@ -41,7 +42,7 @@ t1 = time.time()
 Spectra, Energy_bins = Output[0]
 
 print()
-print("It took ", float(t1-t0), " seconds to predict ", N*len(Particle_List), " cosmic ray spectra.")
+print("It took %.2e seconds to predict "%float(t1-t0), N*len(Particle_List), " cosmic ray spectra.")
 print()
 print("The Output spectra have the shape ", Spectra.shape, " (N, number of energy bins)")
 print()
@@ -61,7 +62,7 @@ print('Second Example: Simulate various cosmic ray spectra with one set of fixed
 
 N = 1
 
-prop_params = DRN.create_propagation_parameters() # Use helper function, leave parameters at default, 
+prop_params = DRN.create_INJ_BRK_parameters() # Use helper function, leave parameters at default, 
 
 # Step 3 - Define the desired output spectra
 
@@ -82,7 +83,7 @@ He3, Energy_He3 = Output[3]
 He4, Energy_He4 = Output[4]
 
 print()
-print("It took ", float(t3-t2), " seconds to predict ", N*len(Particle_List), " cosmic ray spectra of different particle types.")
+print("It took %.2e seconds to predict "%float(t3-t2), N*len(Particle_List), " cosmic ray spectra of different particle types.")
 print()
 print("As an example, the proton spectrum might look like this (GeV^-1 m^-2 sr^-1 s^-1)")
 print(p)
