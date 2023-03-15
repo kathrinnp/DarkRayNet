@@ -188,12 +188,12 @@ We only give a very brief overview here. Please refer to [2, 3] for a detailed d
 
 All cosmic ray spectra used for the network training are simulated with GALPROP [2] which numerically solves the transport equation in the Galaxy. 
 
-$$\frac{\partial \psi_i (\bm{x}, p, t)}{\partial t} = 
-    q_i(\bm{x}, p) +  
-    \bm{\nabla} \cdot \left(  D_{xx} \bm{\nabla} \psi_i - \bm{V} \psi_i \right) 
+$$\frac{\partial \psi_i (x, p, t)}{\partial t} = 
+    q_i(x, p) +  
+    \nabla \cdot \left(  D_{xx} \bm{\nabla} \psi_i - V \psi_i \right) 
      +  \frac{\partial}{\partial p} p^2 D_{pp} \frac{\partial}{\partial p} \frac{1}{p^2} \psi_i - 
     \frac{\partial}{\partial p} \left( \frac{\mathrm{d} p}{\\mathrm{d} t} \psi_i  
-    - \frac{p}{3} (\bm{\nabla \cdot V}) \psi_i \right) -
+    - \frac{p}{3} (\nabla \cdot V) \psi_i \right) -
     \frac{1}{\tau_{f,i}} \psi_i - \frac{1}{\tau_{r,i}} \psi_i$$
 
 Refer to [3] for a detailed description of the propagation model used for the training of the neural networks.
