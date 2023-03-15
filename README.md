@@ -17,7 +17,7 @@ The training of the provided networks is based on GALPROP [2] simulations.
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and physical assumption on which the training data is based. 
 
-**If you choose to use this tool, please cite ArXiv:2107.12395 [3] and  ArXiv:23XX.XXXXX [1]**
+**If you choose to use this tool, please cite ArXiv:2107.12395 [3] and  ArXiv:2303.07362 [1]**
  
 If you have questions or problems, file an issue in this repository or contact "nippel *at* physik *dot* rwth-aachen *dot* de"
 ________________________________________________________________
@@ -268,7 +268,8 @@ The accuracy of the neural networks was tested in the development phase. We foun
 The computing time for obtaining an output prediction using this tool depends on the number of selected CR particle types. You can simulate a few thousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-RNN-based methods by a factor of order $\gtrsim 10^3$. 
 ________________________________________________________________
 
-[1] S. Balan, F. Kahlhoefer, M. Korsmeier, S. Manconi, K. Nippel *Title to be added*, ArXiv:[23XX.XXXXX]() 
+[1] S. Balan, F. Kahlhoefer, M. Korsmeier, S. Manconi, K. Nippel *Fast and accurate AMS-02 antiproton
+likelihoods for global dark matter fits*, ArXiv:[2303.07362](https://arxiv.org/abs/2303.07362) 
 
 [2] https://galprop.stanford.edu/
 
