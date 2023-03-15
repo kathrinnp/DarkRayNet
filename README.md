@@ -190,7 +190,7 @@ All cosmic ray spectra used for the network training are simulated with GALPROP 
 
 $$\frac{\partial \psi_i (x, p, t)}{\partial t} = 
     q_i(x, p) +  
-    \nabla \cdot \left(  D_{xx} \bm{\nabla} \psi_i - V \psi_i \right) 
+    \nabla \cdot \left(  D_{xx} \nabla \psi_i - V \psi_i \right) 
      +  \frac{\partial}{\partial p} p^2 D_{pp} \frac{\partial}{\partial p} \frac{1}{p^2} \psi_i - 
     \frac{\partial}{\partial p} \left( \frac{\mathrm{d} p}{\\mathrm{d} t} \psi_i  
     - \frac{p}{3} (\nabla \cdot V) \psi_i \right) -
