@@ -182,28 +182,28 @@ class DRN:
         if self.continue_all == False:
             p_flux = np.zeros((self.N,len(self.E_ext)))
         else:
-            p_flux = 10**self.p_model.predict((self.pp - np.array(self.p_trafos[0]))/np.array(self.p_trafos[1]))/self.E_ext**2.7
+            p_flux = 10**self.p_model.predict((self.pp - np.array(self.p_trafos[0]))/np.array(self.p_trafos[1]), verbose = 0)/self.E_ext**2.7
         return [p_flux, self.E_ext]
 
     def D_sim(self):
         if self.continue_all == False:
             D_flux = np.zeros((self.N,len(self.E_ext)))
         else:
-            D_flux = 10**self.D_model.predict((self.pp - np.array(self.D_trafos[0]))/np.array(self.D_trafos[1]))/self.E_ext**2.7
+            D_flux = 10**self.D_model.predict((self.pp - np.array(self.D_trafos[0]))/np.array(self.D_trafos[1]), verbose = 0)/self.E_ext**2.7
         return [D_flux, self.E_ext]
 
     def He3_sim(self):
         if self.continue_all == False:
             He3_flux = np.zeros((self.N,len(self.E_ext)))
         else:
-            He3_flux = 10**self.He3_model.predict((self.pp - np.array(self.He3_trafos[0]))/np.array(self.He3_trafos[1]))/self.E_ext**2.7
+            He3_flux = 10**self.He3_model.predict((self.pp - np.array(self.He3_trafos[0]))/np.array(self.He3_trafos[1]), verbose = 0)/self.E_ext**2.7
         return [He3_flux, self.E_ext]
 
     def He4_sim(self):
         if self.continue_all == False:
             He4_flux = np.zeros((self.N,len(self.E_ext)))
         else:
-            He4_flux = 10**self.He4_model.predict((self.pp - np.array(self.He4_trafos[0]))/np.array(self.He4_trafos[1]))/self.E_ext**2.7
+            He4_flux = 10**self.He4_model.predict((self.pp - np.array(self.He4_trafos[0]))/np.array(self.He4_trafos[1]), verbose = 0)/self.E_ext**2.7
         return [He4_flux, self.E_ext]
 
     def secondary_sim(self):
@@ -211,7 +211,7 @@ class DRN:
             s_flux = np.zeros((self.N,len(self.E_bins)))
         else:
             propagation_parameters_s = ((self.pp - np.array(self.S_trafos[0]))/np.array(self.S_trafos[1]))
-            s_flux = 10**self.S_model.predict(propagation_parameters_s)/self.E_bins**2.7
+            s_flux = 10**self.S_model.predict(propagation_parameters_s, verbose = 0)/self.E_bins**2.7
         return [s_flux, self.E_bins]
 
     def dbar_secondary_sim(self):
@@ -220,7 +220,7 @@ class DRN:
             s_flux = np.zeros((self.N,len(E_nuc)))
         else:
             propagation_parameters_s = ((self.pp - np.array(self.S_trafos_dbar[0]))/np.array(self.S_trafos_dbar[1]))
-            s_flux = 10**(self.S_model_dbar.predict(propagation_parameters_s) + self.S_means_dbar)
+            s_flux = 10**(self.S_model_dbar.predict(propagation_parameters_s, verbose = 0) + self.S_means_dbar)
         return [s_flux, E_nuc]
 
     def DM_sim(self):
@@ -229,7 +229,7 @@ class DRN:
             logx_grid = np.linspace(-3.7, min_x, 40)
             x_grid = 10**logx_grid
             E_eval = 10**(m0[:,np.newaxis]-3) * np.repeat([x_grid], len(m0[:,np.newaxis]), axis = 0)
-            final_flux = 10**(self.DM_model.predict([m, fs, prop_param])) * 1/(10**(m0[:,np.newaxis]-3))**3 * 1/np.repeat([x_grid], len(m0[:,np.newaxis]), axis = 0)
+            final_flux = 10**(self.DM_model.predict([m, fs, prop_param], verbose = 0)) * 1/(10**(m0[:,np.newaxis]-3))**3 * 1/np.repeat([x_grid], len(m0[:,np.newaxis]), axis = 0)
             DM_flux = np.zeros((len(m), 28))
             for i in range(len(m)):
                 E_bins_sub = []
@@ -253,10 +253,8 @@ class DRN:
 
     def DM_sim_dbar(self):
         E_nuc = self.E_nuc_dbar[15:36]
-        
         def ufunc(x):
             # inverse energy bin transformation, used to have x bins (x = E/m) for most relevant energies during training
-            #y =  - 0.125 * np.log(0.005516564420760771 * (-0.933731600067154 + 1.0/(0.005488294268991179 + x)))
             y = -0.166667 * np.log(0.02423396784569112 * (-0.8745348747135228+1.0/(0.02373102554162521+x)))
             return y
         def undo_trafo(fluxes, E_bins, masses, p_c, p_c0 = 210, nBins = 80, E_min = -2):
@@ -266,7 +264,6 @@ class DRN:
             x_0 = np.linspace(0, 1, nBins)
             x_scale = ufunc(x_0)
             for i in range(len(fluxes)):
-                # E_grid = np.logspace(E_min, np.log10(10**masses[i]/2), nBins)
                 E_grid = 10**(x_scale * (np.log10(10**masses[i]/2) - E_min) + E_min)
                 retr_inds = np.where((E_bins >= 10**E_min) & (E_bins <= 10**masses[i]/2))[0]
                 E_bins_sub = E_bins[retr_inds]
@@ -275,6 +272,7 @@ class DRN:
             return retr_flux
         def make_prediction(prop_param, m, fs, m0, coalescence, p_c):
             cutoff = 10
+            print(m, fs, coalescence, prop_param, p_c, m0)
             DM_flux = self.DM_model_dbar.predict([m, fs, coalescence, prop_param], verbose = 0)
             DM_flux = (DM_flux - 1)*cutoff
             DM_flux = 10**(DM_flux)
@@ -287,7 +285,7 @@ class DRN:
         elif self.continue_db_DM == False:
             DM_flux = np.zeros((self.N,len(E_nuc)))
         else:
-            propagation_parameters_DM = ((self.pp - np.array(self.DM_trafos_dbar[0,0]))/np.array(self.DM_trafos[0,1]))
+            propagation_parameters_DM = ((self.pp - np.array(self.DM_trafos_dbar[0,0]))/np.array(self.DM_trafos_dbar[0,1]))
             DM_mass_t = (self.DM_mass - np.log10(5e3)) / (np.log10(5e6) - np.log10(5e3))
             DM_fs = (np.log10(self.DM_fs) - np.array(self.DM_trafos_dbar[1,0])) / (np.array(self.DM_trafos_dbar[1,1])- np.array(self.DM_trafos_dbar[1,0]))
             pc_values = self.coalescence_parameters[:,1]
