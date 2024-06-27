@@ -4,22 +4,25 @@
 
 ## A Neural Network Based Simulation Tool for Indirect Dark Matter Searches
 
-The recurrent neural networks (RNNs) provided in this tool can quickly simulate antiprotons, protons and Helium cosmic ray (CR) spectra at Earth, for an extensive range of parameters. 
+The recurrent neural networks (RNNs) provided in this tool can quickly simulate antiprotons, antideuterons, protons and Helium cosmic ray (CR) spectra at Earth, for an extensive range of parameters. 
+
+## *v3 Updates*
+$\overline{D}$*arkRayNet:* *In this most recent version we have added the possibility to simulate the cosmic ray fluxes for antideuterons. As for the antiprotons, the spectra can be predicted for a signal from dark matter annihilation **DM Antideuterons** and for secondary emission **Secondary Antideuterons**. The corresponding neural networks are trained as before on GALPROP simulations. The injection of cosmic rays from dark matter annihilation has been computed and presented in [1].*
 
 ## *v2 Updates*
 
-*With respect to the initial release we have altered the initial parametrizations of the cosmic-ray propagation model and added an alternative setup. The respective setups and their usage are explained below. In addition to that, we now also release a sample of propagation parameters equally weighted according to their posterior in a MultiNest scan (for details see section 'Parameter Samples' and [1])*
+*With respect to the initial release we have altered the initial parametrizations of the cosmic-ray propagation model and added an alternative setup. The respective setups and their usage are explained below. In addition to that, we now also release a sample of propagation parameters equally weighted according to their posterior in a MultiNest scan (for details see section 'Parameter Samples' and [2])*
 
 
 The antiproton spectra consist of both a contribution of secondary emission and a component resulting from dark matter (DM) annihilation into various Standard Model particles that contribute to antiproton fluxes.
 The tool is designed to predict measurable cosmic ray spectra for thousands of parameter sets in few seconds and thus enables quick parameter scans for indirect dark matter searches.
-The training of the provided networks is based on GALPROP [2] simulations.
+The training of the provided networks is based on GALPROP [3] simulations.
  
 The following provides an introduction of the tool and its functions, as well as a description of the neural network involved and physical assumption on which the training data is based. 
 
-**If you choose to use this tool, please cite ArXiv:2107.12395 [3] and  ArXiv:2303.07362 [1]**
+**If you choose to use this tool, please cite ArXiv:2107.12395 [4] and  ArXiv:2303.07362 [2]. If you use it to predict antideuteron spectra, please cite ArXiv:2406.XXXXX**
  
-If you have questions or problems, file an issue in this repository or contact "nippel *at* physik *dot* rwth-aachen *dot* de"
+If you have questions or problems, file an issue in this repository or contact "nippel *at* physik *dot* rwth-aachen *dot* de" or "rathmann *at* physik *dot* rwth-aachen *dot* de"
 ________________________________________________________________
  
 ### Table of Contents
@@ -71,9 +74,9 @@ command and for the use of the tool with the corresponding dependencies reactiva
 
 *prevent_extrapolation* (default: True) If any of the input parameters are outside of the trained parameter regions this raises a warning and the corresponding cosmic ray fluxes are zero. 
 
-*init_particles* (default ["DM Antiprotons", "Secondary Antiprotons"])[8] Only for the particle types initialized here the corresponding networks can be called for flux predictions. This is necessary as each particle type has its own network and thus the networks are only loaded if they are needed. 
+*init_particles* (default ["DM Antiprotons", "Secondary Antiprotons"])[9] Only for the particle types initialized here the corresponding networks can be called for flux predictions. This is necessary as each particle type has its own network and thus the networks are only loaded if they are needed. 
 
-**predict** (particle_list,  propagation_parameters,  DM_mass  =  None,  DM_fs  =  None,  sigma_v  =  None)
+**predict** (particle_list,  propagation_parameters,  DM_mass  =  None,  DM_fs  =  None,  sigma_v  =  None, coalescence_parameters = None)
 
 Inputs:
 
@@ -82,6 +85,8 @@ Inputs:
 
 		 'DM Antiprotons, 
 		 'Secondary Antiprotons', 
+		 'DM Antideuterons',
+		 'Secondary Antideuterons',
 		 'Protons', 
 		 'Deuterium', 
 		 'Helium 3', 
@@ -140,11 +145,20 @@ Inputs:
 		 - Default: None
 		 - Only relevant if list of desired comic ray spectra contains 'DM Antiprotons', if not given will be set to default ($3 \cdot 10^{-26}$ cm$^3$ s$^-1$)
 		 - Scalar or List/1D Array of length N (desired number of simulated fluxes)
+- *Coalescence Parameters*
+		 - Default: None
+		 - Only relevant if list of desired comic ray spectra contains 'Secondary Antideuterons' or 'DM Antideuterons'
+		 - Shape = (2,) or (N,2)
+		 - Here, r_Lambda_b is the parameter describing the rescaling of the Lambda_b production rate and p_c is the coalescence momentum in MeV/c. 
+		The coalescence model is described in [1].
+		 - Order: 
+		 
+		 	r_Lambda_b, p_c
 
 Outputs:
 
  - List of tuples (flux, energy bins) for each element in the list of desired fluxes. 
-		 - The length of the energy bins (len(E)) can vary for different particle types, as they're adjusted to the available measurements (AMS-02 [4], Voyager [5])
+		 - The length of the energy bins (len(E)) can vary for different particle types, as they're adjusted to the available measurements (AMS-02 [5], Voyager [6])
 		 - Shape of each flux array: 
 		 
 		 (N, length(energy bins)) or (length(energy bins),) if N=1
@@ -154,7 +168,7 @@ Cosmic Ray spectra of identical charge number are evaluated at the identical ene
 **create_INJ.BRK_parameters** (gamma_1p = 1.72, gamma_1 = 1.73, R_0 = 6.43e3, s = 0.33, gamma_2p = 2.45, gamma_2 = 2.39, D_0 = 4.1e28, delta = 0.372, delta_h_delta = -0.09, R_1D = 2.34e5, v_0c = 0.64, v_A = 20.4, N_identical = 1)
 
 - **Helper function** that provides an array of propagation parameters suitable for the input of the predict function in the INJ.BRK model. 
-- Input parameter defaults are taken from a fit of simulated antiproton, proton and helium fluxes to AMS-02 [4] and Voyager [5] data, see table 1 in [1]. 
+- Input parameter defaults are taken from a fit of simulated antiproton, proton and helium fluxes to AMS-02 [5] and Voyager [6] data, see table 1 in [2]. 
 - N_identical is set to 1 but can be increased if multiple identical sets of parameters are desired, for example for evaluation multiple sets of DM parameters at once.
 - Output: numpy array of shape (12,) or (N_identical,12) if N_identical > 1.
 
@@ -178,15 +192,15 @@ ________________________________________________________________
 
 ### Artificial Neural Networks
 
-There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponds to one of the particle types. Note that for the secondary antiprotons we automatically include tertiary antiprotons.  Tertiary DM antiprotons are included in the DM antiprotons and secondary protons are included in the proton spectra. 
-The neural networks have a build in recurrent layer and are implemented using the Keras API [6] and Tensorflow as backend [7]. For a detailed description of the architectures and the training process see [3].
+There is a total of six artificial neural networks (ANNs) implemented in the Dark Ray Net tool, each corresponding to one of the particle types. Note that for the secondary antiprotons and antideuterons we automatically include tertiary cosmic rays.  Tertiary DM antiprotons/antideuterons are included in the DM antiprotons/antideuterons and secondary protons are included in the proton spectra. 
+The neural networks have a build in recurrent layer and are implemented using the Keras API [7] and Tensorflow as backend [8]. For a detailed description of the architectures and the training process see [4].
 ### Physical Assumptions
 
 We only give a very brief overview here. Please refer to [2, 3] for a detailed description. 
 
 **Cosmic Ray Propagation**
 
-All cosmic ray spectra used for the network training are simulated with GALPROP [2] which numerically solves the transport equation in the Galaxy. 
+All cosmic ray spectra used for the network training are simulated with GALPROP [3] which numerically solves the transport equation in the Galaxy. 
 
 $$\frac{\partial \psi_i (x, p, t)}{\partial t} = 
     q_i(x, p) +  
@@ -196,7 +210,7 @@ $$\frac{\partial \psi_i (x, p, t)}{\partial t} =
     - \frac{p}{3} (\nabla \cdot V) \psi_i \right) -
     \frac{1}{\tau_{f,i}} \psi_i - \frac{1}{\tau_{r,i}} \psi_i$$
 
-Refer to [3] for a detailed description of the propagation model used for the training of the neural networks.
+Refer to [4] for a detailed description of the propagation model used for the training of the neural networks.
 
 The setup called 'DIFF.BRK' assumes two breaks in the diffusion coefficient and no reacceleration while the setup 'INJ.BRK' is modeled with a break in the injection spectrum and a reacceleration term. An intuitive understanding on how the source spectrum and diffusion coefficient modeling differs in these two model is given in the sketches below.
 
@@ -209,7 +223,11 @@ The effect of solar modulation is not implemented in this tool, and should be ad
 
 **Dark Matter Annihilation**
 
-We consider WIMP dark matter annihilations in the Galactic dark matter halo. The dark matter density is modeled by a spherically symmetric NFW profile  (refer to [1], in which we provide parameters of the profile). The annihilation spectra into standard model particles is taken from the tool PPPC4DMID as computed with Pythia v8.135 by Cirelli et al. [8]. 
+We consider WIMP dark matter annihilations in the Galactic dark matter halo. The dark matter density is modeled by a spherically symmetric NFW profile  (refer to [2], in which we provide parameters of the profile). In the case of antiprotons, the annihilation spectra into standard model particles is taken from the tool PPPC4DMID as computed with Pythia v8.135 by Cirelli et al. [9]. For antideuterons, we have computed the annihilation spectra in [1].
+
+**The coalescence model**
+
+We model the production of antideuterons with the MC-based coalescence model with two free parameters: the coalescence momentum p_c and a rescaling in the Lambda_b transition rate r_Lamdba_b (see [10] for further information). Antiprotons and antineutrons will form an antideuteron id their relative momentum is smaller than p_c which we tuned to the amount of antideuterons produced at LEP in e+ e- colisions.
 
 ________________________________________________________________
 
@@ -259,30 +277,36 @@ and the branching fractions must be chosen to be larger than 10^-5, i.e. 0.001 %
 So a maximally dominant branching fraction would be 1 - 7*10^-5 = 0.99993.
 For physical reasons, make sure to normalize the branching fractions in such a way that they sum up to one. 
 
+**Coalescence** The parameters for the coalescence model have been sampled in the ranges $0.3 \leq r_{\Lambda_b} \leq 20$ and $148 \leq p_c \leq 300$ for training the antideuteron networks.
+
 ________________________________________________________________
 
 ### Performance
 
-The accuracy of the neural networks was tested in the development phase. We found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude ($\lesssim 1~\%$) significantly below the measurement uncertainties of the AMS-02 data ($\sim 5-10~\%$) [4], and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect relative to the magnitude of the measurement is miniscule. We elaborate further on this in section 3.4 in [3]. 
+The accuracy of the neural networks was tested in the development phase. We found that each cosmic ray flux predicted by the networks within the trained parameter regions differs from the simulations by a magnitude ($\lesssim 1~\%$) significantly below the measurement uncertainties of the AMS-02 data ($\sim 5-10~\%$) [5], and thus only marginally affect any likelihood evaluations. Solely the prediction of the DM antiproton flux around edges of the energy range differs more noticeable relative to the simulation but again, the effect relative to the magnitude of the measurement is miniscule. We elaborate further on this in section 3.4 in [4]. 
 
 The computing time for obtaining an output prediction using this tool depends on the number of selected CR particle types. You can simulate a few thousand spectra of one particle type in only one second. For multiple spectra multiple networks have to be called because of which the simulation time can increase to a couple of seconds. Regardless, this tool accelerates the evaluation of CR fluxes significantly with respect to non-RNN-based methods by a factor of order $\gtrsim 10^3$. 
 ________________________________________________________________
 
-[1] S. Balan, F. Kahlhoefer, M. Korsmeier, S. Manconi, K. Nippel *Fast and accurate AMS-02 antiproton
+[1] J. Heisig, M. Korsmeier, M. Krämer, K. Nippel, L. Rathmann, $\overline{D}$*arkRayNet: Emulation of cosmic-ray antideuteron fluxes from dark matter* (2024)
+
+[2] S. Balan, F. Kahlhoefer, M. Korsmeier, S. Manconi, K. Nippel *Fast and accurate AMS-02 antiproton
 likelihoods for global dark matter fits*, ArXiv:[2303.07362](https://arxiv.org/abs/2303.07362) 
 
-[2] https://galprop.stanford.edu/
+[3] https://galprop.stanford.edu/
 
-[3] F. Kahlhoefer, M. Korsmeier, M. Krämer, S. Manconi, K. Nippel, *Constraining Dark Matter Annihilation with Cosmic Ray Antiprotons using Neural Networks*, In: Journal of Cosmology and Astroparticle Physics 12(2021)037, DOI : [10.1088/1475-7516/2021/12/037](https://iopscience.iop.org/article/10.1088/1475-7516/2021/12/037), ArXiv:[2107.12395](https://arxiv.org/abs/2107.12395).
+[4] F. Kahlhoefer, M. Korsmeier, M. Krämer, S. Manconi, K. Nippel, *Constraining Dark Matter Annihilation with Cosmic Ray Antiprotons using Neural Networks*, In: Journal of Cosmology and Astroparticle Physics 12(2021)037, DOI : [10.1088/1475-7516/2021/12/037](https://iopscience.iop.org/article/10.1088/1475-7516/2021/12/037), ArXiv:[2107.12395](https://arxiv.org/abs/2107.12395).
 
-[4] AMS Collaboration, M. Aguilar et al., The Alpha Magnetic Spectrometer (AMS) on the
+[5] AMS Collaboration, M. Aguilar et al., The Alpha Magnetic Spectrometer (AMS) on the
 international space station: Part II — Results from the first seven years, Phys. Rept. 894
 (2021) 1–116. https://www.sciencedirect.com/science/article/pii/S0370157320303434?via%3Dihub
 
-[5] E. C. Stone, A. C. Cummings, F. B. McDonald, B. C. Heikkila, N. Lal, et al., Voyager 1, http://dx.doi.org/10.1126/science.1236408
+[6] E. C. Stone, A. C. Cummings, F. B. McDonald, B. C. Heikkila, N. Lal, et al., Voyager 1, http://dx.doi.org/10.1126/science.1236408
 
-[6] https://keras.io/api/
+[7] https://keras.io/api/
 
-[7] https://www.tensorflow.org/
+[8] https://www.tensorflow.org/
 
-[8] Marco Cirelli et al. *PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection*, In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051, DOI : [10.1088/1475-7516/2011/03/051](https://iopscience.iop.org/article/10.1088/1475-7516/2011/03/051), ArXiv:[1012.4515](https://arxiv.org/abs/1012.4515).
+[9] Marco Cirelli et al. *PPPC 4 DM ID: A Poor Particle Physicist Cookbook for Dark Matter Indirect Detection*, In: Journal of Cosmology and Astroparticle Physics 2011.03 (2010), pp. 051–051, DOI : [10.1088/1475-7516/2011/03/051](https://iopscience.iop.org/article/10.1088/1475-7516/2011/03/051), ArXiv:[1012.4515](https://arxiv.org/abs/1012.4515)
+
+[10] M. W. Winkler, T. Linden, *Dark Matter Annihilation Can Produce a Detectable Antihelium Flux through $\overline{\Lambda}_b$ Decays*, In: Phys. Rev. Lett. 126, 101101 (2021), DOI: [PhysRevLett.126.101101](https://doi.org/10.1103/PhysRevLett.126.101101), ArXiv: [2006.16251](https://arxiv.org/abs/2006.16251)

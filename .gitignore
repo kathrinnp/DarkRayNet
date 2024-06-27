@@ -1,4 +1,9 @@
-./env
 ./__pycache__
 ./*.pyc
 ./.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
