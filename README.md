@@ -47,8 +47,8 @@ This tool is based entirely on **Python 3**.
 The packages needed to execute the functions in this tool are:
 
  - NumPy 
- - Tensorflow (version 2.3.1)
- - h5py (version 2.10.0)
+ - Tensorflow (version 2.6.2)
+ - h5py (version 3.1.0)
  - Jupyter Notebook (optional, for example notebook)
  - Matplotlib (optional, for example notebook)
  
@@ -143,7 +143,7 @@ Inputs:
 	 Please normalize your branching fractions so that for each flux the sum of the fractions are 1. 
  - *Dark Matter Annihilation Cross Section*
 		 - Default: None
-		 - Only relevant if list of desired comic ray spectra contains 'DM Antiprotons', if not given will be set to default ($3 \cdot 10^{-26}$ cm$^3$ s$^-1$)
+		 - Only relevant if list of desired comic ray spectra contains 'DM Antiprotons' or 'DM Antideuterons', if not given will be set to default ($3 \cdot 10^{-26}$ cm$^3$ s$^-1$)
 		 - Scalar or List/1D Array of length N (desired number of simulated fluxes)
 - *Coalescence Parameters*
 		 - Default: None
@@ -179,12 +179,14 @@ Cosmic Ray spectra of identical charge number are evaluated at the identical ene
 
 ### Examples
 
-We have set up two examples to aid further understanding of the usage of the tool.
+We have set up three examples to aid further understanding of the usage of the tool.
 
 - "Example_INJ.BRK.py" - A python file that prints out exemplary cosmic ray spectra based on arbitrarily defined input parameters. This file can also be run to check whether all requirements are installed correctly.
 Here the propagation setup we chose for the example is the 'INJ.BRK' model with default parameters.
 
 - "Example_DIFF.BRK_Notebook.ipynb" - A jupyter notebook in which some exemplary spectra are plotted for a visualization of the outputs of the tool. Here the propagation setup we chose for the example is the 'DIFF.BRK' model.
+
+- "Example_Antideuteron_DRN.ipynb" - A jupyter notebook in which some exemplary antideuteron spectra are plotted to visualize the effects of the coalescence parameters.
 
 ________________________________________________________________
 
