@@ -43,7 +43,7 @@ ________________________________________________________________
 
 ### Requirements and Installation
 
-This tool is based entirely on **Python 3**. 
+This tool is based entirely on **Python 3** (it was validated with version Python 3.6.8). 
 The packages needed to execute the functions in this tool are:
 
  - NumPy 
