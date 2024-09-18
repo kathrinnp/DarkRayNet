@@ -133,6 +133,8 @@ class DRN:
                 print()
                 print('DRN Info: No value was given for the annihilation cross section. It will be set to default (<sigma v> = 3 * 10^-26 cm^3 s^-1).')
                 sigma_v = 10**(-25.5228)
+            else:
+                sigma_v = self.sigma_v
             out = self.DM_sim()
             out[0] = sigma_v/10**(-25.5228) * out[0]
         elif ptype == 'DM Antideuterons':
@@ -150,6 +152,8 @@ class DRN:
                 print()
                 print('DRN Info: No value was given for the annihilation cross section. It will be set to default (<sigma v> = 3 * 10^-26 cm^3 s^-1).')
                 sigma_v = 10**(-25.5228)
+            else:
+                sigma_v = self.sigma_v
             out = self.DM_sim_dbar()
             out[0] = sigma_v/10**(-25.5228) * out[0]
         elif ptype == 'Secondary Antiprotons':
