@@ -276,7 +276,7 @@ class DRN:
             return retr_flux
         def make_prediction(prop_param, m, fs, m0, coalescence, p_c):
             cutoff = 10
-            print(m, fs, coalescence, prop_param, p_c, m0)
+            #print(m, fs, coalescence, prop_param, p_c, m0)
             DM_flux = self.DM_model_dbar.predict([m, fs, coalescence, prop_param], verbose = 0)
             DM_flux = (DM_flux - 1)*cutoff
             DM_flux = 10**(DM_flux)
@@ -294,8 +294,7 @@ class DRN:
             DM_fs = (np.log10(self.DM_fs) - np.array(self.DM_trafos_dbar[1,0])) / (np.array(self.DM_trafos_dbar[1,1])- np.array(self.DM_trafos_dbar[1,0]))
             pc_values = self.coalescence_parameters[:,1]
             # lambda b log
-            coalescence_inputs = self.coalescence_parameters
-            coalescence_inputs[:,0] = np.log10(coalescence_inputs[:,0])
+            coalescence_inputs = np.array([np.log10(self.coalescence_parameters[:,0]), self.coalescence_parameters[:,1]]).T
             DM_coalescence = (coalescence_inputs - np.array(self.DM_trafos_dbar[2,0])) / (np.array(self.DM_trafos_dbar[2,1])- np.array(self.DM_trafos_dbar[2,0]))
             DM_flux = np.zeros(len(E_nuc))
             DM_flux = make_prediction(propagation_parameters_DM, DM_mass_t, DM_fs, self.DM_mass, DM_coalescence, pc_values)
