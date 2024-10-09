@@ -249,7 +249,7 @@ The neural networks are only accurate in the parameter regions they were trained
 | delta_h - delta |        | -0.2         | -0.08        |
 | R_D,0           | MV     | 3044         | 4928         |
 | s_D             |        | 0.31         | 0.51         |
-| R_D,1           | MV     | 1.22         | 3.15 * 10^5  |
+| R_D,1           | MV     | 1.22 * 10^5  | 3.15 * 10^5  |
 | v_0,c           | km/s   | 0            | 14.5         |
 
 
@@ -266,7 +266,7 @@ The neural networks are only accurate in the parameter regions they were trained
 | D0              | cm^2/s | 3.53 * 10^28 | 5.47 * 10^28 |
 | delta           |        | 0.30         | 0.42         |
 | delta_h - delta |        | -0.17        | -0.04        |
-| R_1,D           | MV     | 125612       | 413544       |
+| R_D,1           | MV     | 125612       | 413544       |
 | v_0,c           | km/s   | 0            | 8.61         |
 | v_A             | km/s   | 14.3         | 29.21        |
 
