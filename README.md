@@ -165,16 +165,16 @@ Outputs:
 
 Cosmic Ray spectra of identical charge number are evaluated at the identical energy bins and can thus easily be added. 
 
-**create_INJ.BRK_parameters** (gamma_1p = 1.72, gamma_1 = 1.73, R_0 = 6.43e3, s = 0.33, gamma_2p = 2.45, gamma_2 = 2.39, D_0 = 4.1e28, delta = 0.372, delta_h_delta = -0.09, R_1D = 2.34e5, v_0c = 0.64, v_A = 20.4, N_identical = 1)
+**create_INJ_BRK_parameters** (gamma_1p = 1.72, gamma_1 = 1.73, R_0 = 6.43e3, s = 0.33, gamma_2p = 2.45, gamma_2 = 2.39, D_0 = 4.1e28, delta = 0.372, delta_h_delta = -0.09, R_1D = 2.34e5, v_0c = 0.64, v_A = 20.4, N_identical = 1)
 
 - **Helper function** that provides an array of propagation parameters suitable for the input of the predict function in the INJ.BRK model. 
 - Input parameter defaults are taken from a fit of simulated antiproton, proton and helium fluxes to AMS-02 [5] and Voyager [6] data, see table 1 in [2]. 
 - N_identical is set to 1 but can be increased if multiple identical sets of parameters are desired, for example for evaluation multiple sets of DM parameters at once.
 - Output: numpy array of shape (12,) or (N_identical,12) if N_identical > 1.
 
-**create_DIFF.BRK_parameters** (gamma_2p = 2.34, gamma_2 = 2.28, D0 = 3.78e28, delta_l = -0.66, delta = 0.52, delta_h_delta = -0.16, R_D0 = 3910, s_D = 0.41, R_D1 = 2.22e5, v_0c = 1.91, N_identical = 1)
+**create_DIFF_BRK_parameters** (gamma_2p = 2.34, gamma_2 = 2.28, D0 = 3.78e28, delta_l = -0.66, delta = 0.52, delta_h_delta = -0.16, R_D0 = 3910, s_D = 0.41, R_D1 = 2.22e5, v_0c = 1.91, N_identical = 1)
 
-- same as *create_INJ.BRK_parameters* for DIFF.BRK model
+- same as *create_INJ_BRK_parameters* for DIFF.BRK model
 - Output: numpy array of shape (10,) or (N_identical,10) if N_identical > 1.
 
 ### Examples
@@ -261,7 +261,7 @@ The neural networks are only accurate in the parameter regions they were trained
 | gamma_1         |        | 1.60         | 1.85         |
 | R_0             | MV     | 4939         | 8765         |
 | s               |        | 0.22         | 0.46         |
-| gamma_2,p       |        | 2.51         | 2.50         |
+| gamma_2,p       |        | 2.41         | 2.50         |
 | gamma_2         |        | 2.36         | 2.44         |
 | D0              | cm^2/s | 3.53 * 10^28 | 5.47 * 10^28 |
 | delta           |        | 0.30         | 0.42         |
