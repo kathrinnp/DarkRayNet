@@ -311,12 +311,20 @@ class DRN:
                 print()
                 print('DRN Warning: The Dark Matter particle types are skipped. At least one of the given DM masses is outside of the provided range (5 GeV to 5 TeV).')
                 continue_DM = False
-            if np.min(self.DM_fs) < 1e-5 or np.max(self.DM_fs) > 1 or not np.allclose(np.sum(self.DM_fs, axis = -1), np.ones_like(np.sum(self.DM_fs, axis = -1))):
-                new_fs = self.norm_scale_fractions(self.DM_fs)
+            if np.min(self.DM_fs) < 1e-5:
+                new_fs = self.correct_fractions(self.DM_fs)
                 self.DM_fs = new_fs
-                print(new_fs)
                 print()
-                print('DRN Info: The selected branching fractions were not in the range of trained parameters or not normalized to one. Values below 1e-5 were mapped to 1e-5 and the remaining fractions normalized accordingly.')
+                print('DRN Info: The selected branching fractions were not in the range of trained parameters. Values below 1e-5 were mapped to 1e-5.')
+                print('New branching fractions: ', new_fs)
+            if np.max(self.DM_fs) > 1:
+                print()
+                print('DRN Warning: The Dark Matter particle types are skipped. At least one branching fraction is bigger than 1 which is outside the allowed range.')
+                continue_DM = False
+            if np.greater(np.sum(self.DM_fs, axis = -1), np.ones_like(np.sum(self.DM_fs, axis = -1))).any():
+                print()
+                print('DRN Warning: The Dark Matter particle types are skipped. At least one sum of branching fraction is bigger than 1. The sum should always be smaller than or equal to one.')
+                continue_DM = False
         if self.coalescence_parameters is not None:
             # p_c
             if self.coalescence_parameters.ndim == 1:
@@ -379,19 +387,19 @@ class DRN:
             propagation_parameters = np.repeat(propagation_parameters[np.newaxis], N_identical, axis = 0)
         return propagation_parameters
 
-    def norm_scale_fractions(self, fs):
+    def correct_fractions(self, fs):
         if fs.ndim > 1:
-            rf = fs/np.sum(fs, axis = -1)[:,None] # initial normalization
-            masked_array = np.where(rf < 1e-5, 0, 1) # ones for every fs >= 1e-5
-            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs < 1e-5
-            masked_rf = masked_array * rf # array with entries only >= 1e-5, else 0
-            scaling = (1-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_rf, axis = -1) # scaling for each >=1e-5 fs, while keeping relative fractions and normalizations
-            new_fs = masked_rf * scaling[:,None] + masked_reversed*1e-5 # scale fs >=1e-5 and set other to 1e-5
+            ini_sum = np.sum(fs, axis = -1)[:,None] # initial normalization
+            masked_array = np.where(fs <= 1e-5, 0, 1) # ones for every fs > 1e-5
+            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs <= 1e-5
+            masked_fs = masked_array * fs # array with entries only >= 1e-5, else 0
+            scaling = (ini_sum-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_fs, axis = -1) # scaling for each >1e-5 fs, while keeping relative fractions and normalizations
+            new_fs = masked_fs * scaling[:,None] + masked_reversed*1e-5 # scale fs >1e-5 and set other to 1e-5
         else:
-            rf = fs/np.sum(fs, axis = -1) # initial normalization
-            masked_array = np.where(rf < 1e-5, 0, 1) # ones for every fs >= 1e-5
-            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs < 1e-5
-            masked_rf = masked_array * rf # array with entries only >= 1e-5, else 0
-            scaling = (1-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_rf, axis = -1) # scaling for each >=1e-5 fs, while keeping relative fractions and normalizations
-            new_fs = masked_rf * scaling + masked_reversed*1e-5 # scale fs >=1e-5 and set other to 1e-5
+            ini_sum = np.sum(fs, axis = -1)
+            masked_array = np.where(fs <= 1e-5, 0, 1) # ones for every fs > 1e-5
+            masked_reversed = np.ones_like(masked_array) - masked_array # ones for every fs <= 1e-5
+            masked_fs = masked_array*fs
+            scaling = (ini_sum-np.sum(masked_reversed, axis = -1)*1e-5)/np.sum(masked_fs, axis = -1)
+            new_fs = masked_fs*scaling + masked_reversed*1e-5
         return new_fs
